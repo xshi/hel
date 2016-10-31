@@ -1,0 +1,342 @@
+macro cut
+cut 0 -
+cut $3  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $4  scep+scem<1.or.xse1+xse2<-3.0
+*cut $21 abs(COSTHG).le.1.0
+*cut $22 abs(COSTHPI).le.1.0
+*cut $23 PHI.le.6.30
+*
+
+* Pi
+cut $1  PRB4CPI>0.01 
+cut $2  CSQ4CPI.LT.CSQ4CKA
+cut $5  muidp+muidm.lt.3   |cut2 set this default for PP
+cut $6  mallpi>3.38.and.mallpi<3.44 
+cut $7  mallpi>3.54.and.mallpi<3.57
+cut $10 $1.and.$2.and.$3.and.$4.and.$5
+cut $11 $10.and.$6  | 
+cut $12 $10.and.$7  | 3.54-3.57
+
+* K 
+cut $31  PRB4CKA>0.01 
+cut $32  CSQ4CKA.LT.CSQ4CPI
+cut $35  muidp+muidm.lt.5   |cut1  default for kaon
+cut $36  mallka>3.38.and.mallka<3.44 
+cut $37  mallka>3.54.and.mallka<3.57
+cut $40  $31.and.$32.and.$3.and.$4.and.$35
+cut $41  $40.and.$36
+cut $42  $40.and.$37
+
+
+return
+****************
+macro file 
+close 0
+chain -
+chain dt    ../hbk/chic.hbk
+chain dt_p  ../hbk/prterr_p.hbk
+chain mc_p  ../hbk/f_chic2pp.hbk
+chain dt_k  ../hbk/prterr_k.hbk
+chain mc_k  ../hbk/f_chic2kk.hbk
+chain g_chic0pp  ../hbk/g_chic0pp.hbk
+chain g_chic0kk  ../hbk/g_chic0kk.hbk
+*chain f_chic0kk  ../hbk/g_chic0kk.hbk
+return
+****************
+macro hc
+h/del 0
+1d 100 ' '   50 -1.0 1.0
+1d 101 ' '   50 -1.0 1.0
+1d 102 ' '   50 -1.0 1.0
+1d 103 ' '   50 -1.0 1.0
+1d 200 ' '   50 -1.0 1.0
+1d 201 ' '   50 -1.0 1.0
+1d 202 ' '   50 -1.0 1.0
+1d 203 ' '   50 -1.0 1.0
+1d 300 ' '   50 0.0 6.28
+1d 301 ' '   50 0.0 6.28
+1d 302 ' '   50 0.0 6.28
+1d 303 ' '   50 0.0 6.28
+return
+****************
+macro chic2
+exe compdtmc#hc
+exe compdtmc#file
+exe compdtmc#cut
+
+opt nstat
+
+igset mtyp 20
+igset mscf 1
+set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+set xwin 5 ;v/siz 36 36
+for/file 66  ../fig/compdtmc_chic2.ps;meta 66 -111 
+zone 2 3
+
+** Pi1
+n/pro 100  //dt/1.COS(thetagp)   $12
+n/pro 101  //mc_p/1.COS(thetagp) $12
+norm 101 $hinfo(100,sum)
+h/pl 100 e
+h/pl 101 s
+atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+** K1
+n/pro 102  //dt/1.COS(thetagk) $42
+n/pro 103  //mc_k/1.COS(thetagk) $42
+norm 103 $hinfo(102,sum)
+h/pl 102 e
+h/pl 103 s
+atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+
+** Pi2
+n/pro 200  //dt/1.COS(thetap) $12
+n/pro 201  //mc_p/1.COS(thetap) $12
+norm  201  $hinfo(200,sum)
+h/pl  200 e
+h/pl  201 s
+atitle 'cos[q]?[p]' 'Entries/0.04' ! 222
+
+** K2
+n/pro 202  //dt/1.COS(thetak) $42
+n/pro 203  //mc_k/1.COS(thetak) $42
+norm  203  $hinfo(202,sum)
+h/pl  202 e
+h/pl  203 s
+atitle 'cos[q]?K' 'Entries/0.04' ! 222
+
+** Pi3
+n/pro 300  //dt/1.PHIp    $12
+n/pro 301  //mc_p/1.PHIp  $12
+norm  301 $hinfo(300,sum)
+h/pl  300 e
+h/pl  301 s
+atitle '[f]?[p]' 'Entries/2[p]/50' ! 222
+
+** K3
+n/pro 302  //dt/1.PHIk    $42
+n/pro 303  //mc_k/1.PHIk  $42
+norm  303 $hinfo(302,sum)
+h/pl  302 e
+h/pl  303 s
+atitle '[f]?K' 'Entries/2[p]/50' ! 222
+
+close 66
+zone
+opt stat 
+return 
+
+****************************************************************
+macro chic0
+exe compdtmc#hc
+exe compdtmc#file
+exe compdtmc#cut
+
+opt nstat
+
+igset mtyp 20
+igset mscf 1
+set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+set xwin 5 ;v/siz 36 36
+for/file 66  ../fig/compdtmc_chic0.ps;meta 66 -111 
+zone 2 3
+
+** Pi1
+n/pro 100  //dt/1.COS(thetagp)   $11
+n/pro 101  //g_chic0pp/1.COS(thetagp) $11
+norm 101 $hinfo(100,sum)
+h/pl 100 e
+h/pl 101 s
+atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+** K1
+n/pro 102  //dt/1.COS(thetagk)   $41
+n/pro 103  //g_chic0kk/1.COS(thetagk) $41
+norm 103 $hinfo(102,sum)
+h/pl 102 e
+h/pl 103 s
+atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+
+** Pi2
+n/pro 200  //dt/1.COS(thetap) $11
+n/pro 201  //g_chic0pp/1.COS(thetap) $11
+norm  201  $hinfo(200,sum)
+h/pl  200 e
+h/pl  201 s
+atitle 'cos[q]?[p]' 'Entries/0.04' ! 222
+
+** K2
+n/pro 202  //dt/1.COS(thetak) $41
+n/pro 203  //g_chic0kk/1.COS(thetak) $41
+norm  203  $hinfo(202,sum)
+h/pl  202 e
+h/pl  203 s
+atitle 'cos[q]?K' 'Entries/0.04' ! 222
+
+** Pi3
+n/pro 300  //dt/1.PHIp    $11
+n/pro 301  //g_chic0pp/1.PHIp  $11
+norm  301 $hinfo(300,sum)
+h/pl  300 e
+h/pl  301 s
+atitle '[f]?[p]' 'Entries/2[p]/50' ! 222
+
+** K3
+n/pro 302  //dt/1.PHIk    $41
+n/pro 303  //g_chic0kk/1.PHIk  $41
+norm  303 $hinfo(302,sum)
+h/pl  302 e
+h/pl  303 s
+atitle '[f]?K' 'Entries/2[p]/50' ! 222
+
+close 66
+zone
+opt stat 
+return 
+**************
+*
+*****************
+*macro chic0
+*exe compdtmc#hc
+*exe compdtmc#file
+*exe compdtmc#cut
+*
+*opt nstat
+*
+*igset mtyp 20
+*igset mscf 1
+*set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+*set xwin 5 ;v/siz 36 36
+*for/file 66  ../fig/compdtmc_chic0.ps;meta 66 -111 
+*zone 2 3
+*
+*** Pi1_0
+*n/pro 100  //dt/1.COS(thetagp)        $11
+*n/pro 101  //g_chic0pp/1.COS(thetagp) $11
+*norm 101 $hinfo(100,sum)
+*h/pl 100 e
+*h/pl 101 s
+*atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+*
+**  K1_0
+*n/pro 100  //dt/1.COS(thetagk)   $41 
+*n/pl  //g_chic0kk/1.COS(thetagk) $41 -101
+*norm 101 $hinfo(100,sum)
+*h/pl 100 e
+*h/pl 101 s
+*atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+*
+**** Pi2
+**n/pro 200  //dt_p/1.COSTHPI  $22
+**n/pro 201  //mc_p/1.COS(thetap) $12
+**norm  201  $hinfo(200,sum)
+**h/pl  200 e
+**h/pl  201 s
+**atitle 'cos[q]?[p]' 'Entries/0.04' ! 222
+**
+**** K2
+**n/pro 200  //dt_k/1.COSTHPI  $22
+**n/pro 201  //mc_k/1.COS(thetak) $42
+**norm  201  $hinfo(200,sum)
+**h/pl  200 e
+**h/pl  201 s
+**atitle 'cos[q]?K' 'Entries/0.04' ! 222
+**
+**** Pi3
+**n/pro 300  //dt_p/1.PHI  $23
+**n/pro 301  //mc_p/1.PHIp  $12
+**norm  301 $hinfo(300,sum)
+**h/pl  300 e
+**h/pl  301 s
+**n/pro 100  //dt_p/1.COSTHG $21
+**atitle '[f]?[p]' 'Entries/2[p]/50' ! 222
+**
+**
+**** K3
+**n/pro 300  //dt_k/1.PHI   $23
+**n/pro 301  //mc_k/1.PHIk  $42
+**norm  301 $hinfo(300,sum)
+**h/pl  300 e
+**h/pl  301 s
+**atitle '[f]?K' 'Entries/2[p]/50' ! 222
+**
+**
+*close 66
+*zone
+*opt stat 
+*return 
+***************
+*
+*
+*
+*
+*
+*
+*
+*****************
+*macro mix
+*exe compdtmc#hc
+*exe compdtmc#file
+*exe compdtmc#cut
+*
+*opt nstat
+*
+*igset mtyp 20
+*igset mscf 1
+*set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+*set xwin 5 ;v/siz 36 36
+*for/file 66  ../fig/compdtmc_mix.ps;meta 66 -111 
+*zone 2 3
+*
+*** Pi1
+*n/pro 100  //dt_p/1.COSTHG $21
+*n/pro 101  //mc_p/1.COS(thetagp) $12
+*norm 101 $hinfo(100,sum)
+*h/pl 100 e
+*h/pl 101 s
+*atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+*** Pi1_0
+*n/pro 100  //dt/1.COS(thetagp)        $11
+*n/pro 101  //g_chic0pp/1.COS(thetagp) $11
+*norm 101 $hinfo(100,sum)
+*h/pl 100 e
+*h/pl 101 s
+*atitle 'cos[q]?[g]' 'Entries/0.04' ! 222
+*
+*** Pi2
+*n/pro 200  //dt_p/1.COSTHPI  $22
+*n/pro 201  //mc_p/1.COS(thetap) $12
+*norm  201  $hinfo(200,sum)
+*h/pl  200 e
+*h/pl  201 s
+*atitle 'cos[q]?[p]' 'Entries/0.04' ! 222
+*
+*** Pi2_0
+*n/pro 200  //dt/1.COS(thetap)        $11
+*n/pro 201  //g_chic0pp/1.COS(thetap) $11
+*norm  201  $hinfo(200,sum)
+*h/pl  200 e
+*h/pl  201 s
+*atitle 'cos[q]?[p]' 'Entries/0.04' ! 222
+*
+*** Pi3
+*n/pro 300  //dt_p/1.PHI  $23
+*n/pro 301  //mc_p/1.PHIp  $12
+*norm  301 $hinfo(300,sum)
+*h/pl  300 e
+*h/pl  301 s
+*n/pro 100  //dt_p/1.COSTHG $21
+*atitle '[f]?[p]' 'Entries/2[p]/50' ! 222
+*
+*** Pi3_2
+*n/pro 300  //dt/1.PHIp         $11
+*n/pro 301  //g_chic0pp/1.PHIp  $11
+*norm  301 $hinfo(300,sum)
+*h/pl  300 e
+*h/pl  301 s
+*n/pro 100  //dt_p/1.COSTHG $21
+*atitle '[f]?[p]' 'Entries/2[p]/50' ! 222
+*
+*close 66
+*zone
+*opt stat 
+*return 
+*

@@ -1,0 +1,179 @@
+MACRO cut  
+
+CUT 0 -
+
+* common
+
+cut $1  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $2  scep+scem<1.or.xse1+xse2<-3.0
+cut $3  tof1<200.and.tof2<200.and.abs(tof1-tof2)<4
+
+* K  K
+cut $41  PRB4CKA>0.01 
+cut $42  CSQ4CKA.LT.CSQ4CPI
+cut $43  muidp+muidm.lt.5                     |cut1 set default for KK
+
+*cut $50  $1.and.$2.and.$3.and.$41.and.$42.and.$43
+*cut $50  $1.and.$3.and.$41.and.$42.and.$43  |Select more Bhabha
+cut $50  $1.and.$2.and.$3.and.$41.and.$42   | more Dimu
+
+cut $51  mallka>3.2.and.mallka<3.7     
+cut $52  mallka>3.54.and.mallka<3.57   
+cut $53  mallka>3.38.and.mallka<3.44   
+cut $54  mallka>3.525.and.mallka<3.585
+
+cut $61  $50.and.$51      | for full range                        
+cut $62  $50.and.$52      | for chic2         
+cut $63  $50.and.$53      | for chic0         
+cut $64  $50.and.$54
+
+return
+****************************************
+macro file
+close 0
+chain -
+chain bb   ../hbk/bkg_bb.hbk
+chain bbmax   ../hbk/bkg_bb_max.hbk
+chain ee   ../hbk/bkg_ee_t10.hbk
+chain eemax   ../hbk/bkg_ee_max.hbk
+chain dimu ../hbk/bkg_dimu_t10.hbk
+chain dimumax ../hbk/bkg_dimu_max.hbk
+chain mm   ../hbk/bkg_mm_t10.hbk
+chain mmmax   ../hbk/bkg_mm_max.hbk
+
+return
+************************************
+macro hc
+h/del 0
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+return
+****************************************
+macro bb
+exe bkg_k#file
+exe bkg_k#cut
+exe bkg_k#hc
+
+zone 1 2
+n/pl //bbmax/1.mallka $61 idh=100
+n/pl //bbmax/1.mallka $62 idh=101
+zone 
+
+output 68 ../dat/bb_k.dat
+n/scan //bbmax/1        $62 ! ! ! thetagk thetak phik
+output -68
+
+return
+****************************************
+macro ee
+exe bkg_k#file
+exe bkg_k#cut
+exe bkg_k#hc
+
+zone 1 2
+n/pl //ee/1.mallka $61 idh=100
+n/pl //ee/1.mallka $62 idh=101
+zone 
+
+n/pl //eemax/1.mallka $62 idh=101
+output 68 ../dat/ee_k_max.dat
+n/scan //eemax/1        $62 ! ! ! thetagk thetak phik
+output -68
+
+return
+************************************
+macro dimu
+exe bkg_k#file
+exe bkg_k#cut
+exe bkg_k#hc
+
+zone 1 2
+n/pl //dimu/1.mallka $61 idh=100
+n/pl //dimumax/1.mallka $62 idh=101
+zone 
+
+output 68 ../dat/dimu_k.dat
+n/scan //dimumax/1        $62 ! ! ! thetagk thetak phik
+output -68
+
+return
+
+************************************
+macro mm
+exe bkg_k#file
+exe bkg_k#cut
+exe bkg_k#hc
+
+zone 1 2
+n/pl //mm/1.mallka $61 idh=100
+n/pl //mmmax/1.mallka $62 idh=101
+zone 
+
+output 68 ../dat/mm_k.dat
+n/scan //mmmax/1        $62 ! ! ! thetagk thetak phik
+output -68
+
+return
+
+**************************************************
+macro p0kk
+exe bkg_k#file
+exe bkg_k#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p0kk/1.mallka $41 idh=100
+n/pl //p0kk/1.mallka $42 idh=101
+zone 
+return
+**************************************************
+macro p2pipi
+exe bkg_k#file
+exe bkg_k#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2pipi10t/1.mallka $41 idh=100
+n/pl //p2pipi10t/1.mallka $42 idh=101
+zone 
+return
+**************************************************
+macro p2kk
+exe bkg_k#file
+exe bkg_k#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2kk10t/1.mallka $41 idh=100
+n/pl //p2kk10t/1.mallka $42 idh=101
+zone 
+return
+
+**************************************************
+macro p2pp
+exe bkg_k#file
+exe bkg_k#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2pp10t/1.mallka $41 idh=100
+n/pl //p2pp10t/1.mallka $42 idh=101
+zone 
+return
+**************************************************
+macro etap0kk
+exe bkg_k#file
+exe bkg_k#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //etap0kk10t/1.mallka $41 idh=100
+n/pl //etap0kk10t/1.mallka $42 idh=101
+zone 
+return
+

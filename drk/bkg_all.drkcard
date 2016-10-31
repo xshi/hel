@@ -1,0 +1,62 @@
+/*LINK ../src/chic ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/d2/exe/bkg_all.drkx
+/*INPUT DISK ~/MC/
+/*OUTPUT DISK ../hbk/
+/* HBOOK ../hbk/bkg_ee.hbk
+/* HBOOK ../hbk/bkg_mm.hbk
+/* HBOOK ../hbk/ggmm-c0.hbk
+/* HBOOK ../hbk/ggmm-c1.hbk
+/* HBOOK ../hbk/ggmm-c2.hbk
+/* HBOOK ../hbk/p0p0mm.hbk
+/* HBOOK ../hbk/ppmm.hbk
+/* HBOOK ../hbk/etamm.hbk
+/* HBOOK ../hbk/3pi.hbk
+/* HBOOK ../hbk/4pi.hbk
+/* HBOOK ../hbk/5pi.hbk
+/* HBOOK ../hbk/bkg_p2bb.hbk
+/* HBOOK ../hbk/bkg_p2bb_t10.hbk
+/* HBOOK ../hbk/bkg_p0kk.hbk
+/* HBOOK ../hbk/bkg_p0p0kk.hbk
+/* HBOOK ../hbk/bkg_p0p0gkk.hbk
+/* HBOOK ../hbk/bkg_3p0kk.hbk
+/* HBOOK ../hbk/bkg_3p0kk_pm.hbk
+/* HBOOK ../hbk/bkg_etagkk.hbk
+/* HBOOK ../hbk/bkg_etap0kk.hbk
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 
+NEVTIM 99999999
+
+BESIOR
+
+comment INPUT ee.ndst RUN
+comment INPUT mm.ndst RUN
+comment INPUT ggmm-c0.ndst RUN
+comment INPUT ggmm-c1.ndst RUN
+comment INPUT ggmm-c2.ndst RUN
+comment INPUT p0p0mm.ndst RUN
+comment INPUT ppmm-1.ndst RUN
+comment INPUT ppmm-2.ndst RUN
+comment INPUT ppmm-3.ndst RUN
+comment INPUT etamm.ndst RUN
+comment INPUT p3pi_402_n11.ndst RUN
+comment INPUT 4pi.ndst RUN
+comment INPUT 5pi.ndst RUN
+INPUT p2bb.ndst RUN
+comment INPUT p2bb_t10.ndst RUN
+comment INPUT p0kk.ndst RUN
+comment INPUT p0p0kk.ndst RUN
+comment INPUT p0p0gkk.ndst RUN
+comment INPUT 3p0kk.ndst RUN
+comment INPUT 3p0kk_m.ndst RUN
+comment INPUT 3p0kk_p.ndst RUN
+comment INPUT etagkk.ndst RUN
+comment INPUT etap0kk.ndst RUN
+
+BESEOR
+END

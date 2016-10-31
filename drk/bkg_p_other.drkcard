@@ -1,0 +1,29 @@
+/*LINK ../src/chic ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/d2/exe/bkg_p_other.drkx
+/*INPUT DISK ~/MC/bkg_p_other
+/*OUTPUT DISK ../hbk/
+/*HBOOK ../hbk/bkg_p_other.hbk
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 
+NEVTIM 99999999
+
+BESIOR
+
+INPUT ggmm-c0.ndst RUN
+INPUT ggmm-c1.ndst RUN
+INPUT ggmm-c2.ndst RUN
+INPUT p0p0mm.ndst RUN
+INPUT ppmm-1.ndst RUN
+INPUT etamm.ndst RUN
+INPUT 3pi.ndst RUN
+INPUT 4pi.ndst RUN
+INPUT 5pi.ndst RUN
+
+BESEOR
+END

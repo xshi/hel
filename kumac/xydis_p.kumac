@@ -1,0 +1,31 @@
+clo 0
+opt stat
+opt nstat 
+chain -
+chain dis  ../hbk/xydis_p.hbk
+h/del 0
+1d 100 'x' 50 1 4
+1d 101 'y' 50 1 4
+2d 200 '  ' 50 1 5  50 1 5 
+
+for/file 66 ../fig/xydis_p.ps ; meta 66 -113
+
+zone
+set mtyp 20
+set mscf 0.6
+n/pl //dis/10.y%x ! -200 
+atit x y
+*FPOINT 1.732 2.449 .03          | Draw a filled point
+SET PLCI 2               | Polyline color index
+SET LTYP 
+v/cr  xx(1) R 1.74
+v/cr exx(1) R 0.04
+v/cr  yy(1) R 2.45
+v/cr eyy(1) R 0.07 
+h/er  xx yy exx eyy 1 21 0.26 1
+
+itx 2.5 2.5  'x=1.74"A#0.04' 
+itx 2.5 2.0  'y=2.45"A#0.07' 
+close 66
+set stat 
+*shell p2e ../fig/distr

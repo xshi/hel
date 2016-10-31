@@ -1,0 +1,50 @@
+/* LINK ../src/chic  ../src/chic.opt
+/*LINK ../src/chic_mumax  ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/exe/dimu/bkg_dimu.drkx
+/*INPUT DISK ~/MC/dimu
+/*OUTPUT DISK ../hbk/
+/*HBOOK ../hbk/bkg_dimu.hbk
+/* HBOOK ../hbk/bkg_dimu_t10.hbk
+/* HBOOK ../hbk/bkg_dimu_max.hbk
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 161253
+NEVTIM 99999999
+
+comment NEVTOT 1612530
+
+
+
+BESIOR
+
+
+INPUT 200k1.ndst RUN
+INPUT 200k2.ndst RUN
+INPUT 200k3.ndst RUN
+INPUT 200k4.ndst RUN
+INPUT 200k5.ndst RUN
+INPUT 100k1.ndst RUN
+INPUT 100k2.ndst RUN
+INPUT 100k3.ndst RUN
+INPUT 100k4.ndst RUN
+INPUT 100k5.ndst RUN
+INPUT 100k6.ndst RUN
+INPUT 100k7.ndst RUN
+INPUT 100k8.ndst RUN
+INPUT 100k9.ndst RUN
+INPUT 100k10.ndst RUN
+INPUT 100k11.ndst RUN
+INPUT 100k12.ndst RUN
+INPUT 100k13.ndst RUN
+INPUT 100k14.ndst RUN
+INPUT 100k15.ndst RUN
+INPUT 100k16.ndst RUN
+INPUT 100k17.ndst RUN
+
+BESEOR
+END

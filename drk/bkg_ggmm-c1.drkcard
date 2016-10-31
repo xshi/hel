@@ -1,0 +1,21 @@
+/*LINK ../src/chic ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/exe/bkg.drkx
+/*INPUT DISK ~/MC/bkg_p_other
+/*OUTPUT DISK ../hbk/
+/*HBOOK ../hbk/bkg_ggmm-c1.hbk
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 21851
+NEVTIM 99999999
+
+BESIOR
+
+INPUT ggmm-c1.ndst RUN
+
+BESEOR
+END

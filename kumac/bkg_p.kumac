@@ -1,0 +1,183 @@
+MACRO cut  
+
+CUT 0 -
+
+* common
+
+cut $1  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $2  scep+scem<1.or.xse1+xse2<-3.0
+cut $3  tof1<200.and.tof2<200.and.abs(tof1-tof2)<4
+
+* Pi Pi
+cut $11  PRB4CPI>0.01 
+cut $12  CSQ4CPI.LT.CSQ4CKA
+cut $13  muidp+muidm.lt.3                     |cut2 set default for PP
+*cut $13  muidp+muidm.lt.5                     |cut1
+
+cut $20  $1.and.$2.and.$3.and.$11.and.$12.and.$13 |Default
+*cut $20  $1.and.$3.and.$11.and.$12.and.$13  |Select more Bhabha
+*cut $20  $1.and.$2.and.$3.and.$11.and.$12 |more Dimu
+
+cut $21 mallpi>3.2.and.mallpi<3.7     
+cut $22 mallpi>3.54.and.mallpi<3.57   
+cut $23 mallpi>3.38.and.mallpi<3.44   
+cut $24 mallpi>3.525.and.mallpi<3.585   
+
+cut $31 $20.and.$21       | for full range    
+cut $32 $20.and.$22       | for chic2         
+cut $33 $20.and.$23       | for chic0         
+cut $34 $20.and.$24
+
+return
+*************************************************
+macro file
+close 0
+chain -
+chain bb   ../hbk/bkg_bb.hbk
+chain bbmax   ../hbk/bkg_bb_max.hbk
+chain ee   ../hbk/bkg_ee_t10.hbk
+chain dimu ../hbk/bkg_dimu.hbk
+chain dimumax ../hbk/bkg_dimu_t10.hbk
+chain mm   ../hbk/bkg_mm_t10.hbk
+chain bkg  ../hbk/bkg_bb.hbk ../hbk/bkg_ee.hbk ../hbk/bkg_dimu.hbk_
+ ../hbk/bkg_mm.hbk ../hbk/bkg_p_other.hbk_
+ ../hbk/bkg_p2pipi.hbk ../hbk/bkg_p2kk.hbk ../hbk/bkg_p2pp.hbk
+
+return
+************************************
+macro hc
+h/del 0
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+return
+****************************************
+macro bb
+exe bkg_p#file
+exe bkg_p#cut
+exe bkg_p#hc
+
+zone 1 2
+n/pl //bbmax/1.mallpi $31 idh=100
+n/pl //bbmax/1.mallpi $32 idh=101
+zone 
+
+output 68 ../dat/bb_p.dat
+n/scan //bbmax/1        $32 ! ! ! thetagp thetap phip
+output -68
+
+return
+************************************
+macro ee
+exe bkg_p#file
+exe bkg_p#cut
+exe bkg_p#hc
+
+zone 1 2
+n/pl //ee/1.mallpi $31 idh=100
+n/pl //ee/1.mallpi $32 idh=101
+zone 
+
+output 68 ../dat/ee_p.dat
+n/scan //ee/1        $32 ! ! ! thetagp thetap phip
+output -68
+
+return
+
+************************************
+macro dimu
+exe bkg_p#file
+exe bkg_p#cut
+exe bkg_p#hc
+
+zone 1 2
+n/pl //dimu/1.mallpi $31 idh=100
+n/pl //dimu/1.mallpi $32 idh=101
+zone 
+
+output 68 ../dat/dimu.dat
+n/scan //dimu/1        $32 ! ! ! thetagp thetap phip
+output -68
+
+return
+************************************
+macro mm
+exe bkg_p#file
+exe bkg_p#cut
+exe bkg_p#hc
+
+zone 1 2
+n/pl //mm/1.mallpi $31 idh=100
+n/pl //mm/1.mallpi $32 idh=101
+zone 
+
+output 68 ../dat/mm.dat
+n/scan //mm/1        $32 ! ! ! thetagp thetap phip
+output -68
+
+return
+
+************************************
+macro p2pipi
+exe bkg_p#file
+exe bkg_p#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2pipi/1.mallpi $11 idh=100
+n/pl //p2pipi/1.mallpi $12 idh=101
+zone 
+
+return
+
+************************************
+macro p2pipi10t
+exe bkg_p#file
+exe bkg_p#cut
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2pipi10t/1.mallpi $11 idh=100
+n/pl //p2pipi10t/1.mallpi $12 idh=101
+zone 
+
+return
+************************************
+macro p2kk10t
+exe bkg_p#file
+exe bkg_p#cut
+h/del 0
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2kk10t/1.mallpi $11 idh=100
+n/pl //p2pp10t/1.mallpi $11 idh=100
+*n/pl //p2kk10t/1.mallpi $12 idh=101
+zone 
+
+return
+**********************************************************************
+macro p2pp10t
+exe bkg_p#file
+exe bkg_p#cut
+h/del 0
+1d 100 ' ' 200 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+zone 1 2
+n/pl //p2kk10t/1.mallpi $11 idh=100
+n/pl //p2kk10t/1.mallpi $12 idh=101
+zone 
+
+return
+**********************************************************************
+macro all
+exe bkg_p#file
+exe bkg_p#cut
+exe bkg_p#hc
+
+n/proj 100 //bkg/1.mallpi $31
+h/pl 100
+return

@@ -1,0 +1,212 @@
+MACRO cut  
+CUT 0 -
+cut $1  PRB4CPI>0.01 
+cut $2  CSQ4CPI.LT.CSQ4CKA
+cut $3  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $4  scep+scem<1.or.xse1+xse2<-3.0
+cut $5  muidp+muidm.lt.3   |cut2 set this default for PP
+
+cut $6 mallpi>3.38.and.mallpi<3.44 
+cut $7 mallpi>3.54.and.mallpi<3.57
+cut $8 mallpi>3.525.and.mallpi<3.585 
+cut $9 mallpi>3.2.and.mallpi<3.7 
+
+cut $10 $1.and.$2.and.$3.and.$4.and.$5
+
+cut $11 $10.and.$9  | 3.2-3.7
+cut $12 $10.and.$7  | 3.54-3.57
+cut $13 $10.and.$6  | for chic0
+cut $14 $10.and.$8
+
+** Kaon
+cut $31  PRB4CKA>0.01 
+cut $32  CSQ4CKA.LT.CSQ4CPI
+cut $35  muidp+muidm.lt.5   |cut1  default for kaon
+
+cut $36 mallka>3.38.and.mallka<3.44
+cut $37 mallka>3.54.and.mallka<3.57
+cut $38 mallka>3.525.and.mallka<3.585
+cut $39 mallka>3.2.and.mallka<3.7
+     
+cut $40  $31.and.$32.and.$3.and.$4.and.$35
+
+cut $41  $40.and.$39
+cut $42  $40.and.$37
+cut $43  $40.and.$36
+cut $44  $40.and.$38
+
+return
+****************************************
+macro file
+close 0
+
+chain -
+chain dt  ../hbk/chic.hbk
+*chain dt2  ../hbk/chic.hbk
+*chain bb  ../hbk/bkg_bb.hbk
+*chain ee  ../hbk/bkg_ee.hbk
+*chain dimu  ../hbk/bkg_dimu.hbk
+*chain mm  ../hbk/bkg_mm.hbk
+
+return
+****************************************
+macro plp
+exe acol#file
+exe acol#cut
+h/del 0
+1d 101 'acol' 100 -1 -0.996 
+*opt nstat 
+*for/file 66 ../fig/acol_p.ps; meta 66 -111
+
+n/pl //dt/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  -101
+itx -0.999 15 '[g][p][p]'
+zone 
+close 66
+opt stat 
+return
+****************************************
+macro plk
+exe acol#file
+exe acol#cut
+h/del 0
+1d 101 'acol' 100 -1 -0.995
+opt nstat 
+for/file 66 ../fig/acol_k.ps; meta 66 -111
+n/pl //dt/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  -101
+itx -0.999 10 '[g]K K'
+zone 
+close 66
+opt stat 
+return
+****************************************
+macro bkg_all_p
+exe acol#file
+exe acol#cut
+h/del 0
+1d 102 'bb-[g][p][p]' 100 -1 -0.996 
+1d 103 'ee-[g][p][p]' 100 -1 -0.996 
+1d 104 'dimu-[g][p][p]' 100 -1 -0.996 
+1d 105 'mm-[g][p][p]' 100 -1 -0.996 
+*opt nstat 
+*for/file 66 ../fig/acol_p_bkg.ps; meta 66 -111
+
+n/proj 102 //bb/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 103 //ee/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 104 //dimu/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 105 //mm/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+opt stat 
+zone 2 2  
+h/pl 102
+h/pl 103
+h/pl 104
+h/pl 105
+*close 66
+return
+
+****************************************
+macro sig_bkg_p
+exe acol#file
+exe acol#cut
+h/del 0
+1d 101 'acol' 100 -1 -0.996 
+
+opt stat 
+n/pl //dt/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  -101
+
+1d 102 'bkg' 100 -1 -0.996 
+
+n/proj 102 //bb/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 102 //ee/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 102 //dimu/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+n/proj 102 //mm/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $12  
+
+opt nstat 
+
+for/file 66 ../fig/acol_bkg_p.ps; meta 66 -111
+zone 
+set hcol 1;h/pl 101
+set hcol 1101;h/pl 102 s; set hcol 1 
+itx -0.999 15 '[g][p][p]'
+close 66
+return
+****************************************
+macro bkg_all_k
+exe acol#file
+exe acol#cut
+h/del 0
+1d 102 'bb-[g]KK' 100 -1 -0.996 
+1d 103 'ee-[g]KK' 100 -1 -0.996 
+1d 104 'dimu-[g]KK' 100 -1 -0.996 
+1d 105 'mm-[g]KK' 100 -1 -0.996 
+
+n/proj 102 //bb/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 103 //ee/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 104 //dimu/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 105 //mm/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+opt stat 
+zone 2 2  
+h/pl 102
+h/pl 103
+h/pl 104
+h/pl 105
+*close 66
+return
+*********************************************************
+macro sig_bkg_k
+exe acol#file
+exe acol#cut
+h/del 0
+1d 101 'acol' 100 -1 -0.996 
+
+n/pl //dt/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  -101
+
+1d 102 'bkg' 100 -1 -0.996 
+
+n/proj 102 //bb/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 102 //ee/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 102 //dimu/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+n/proj 102 //mm/1.(pxp*pxm+pyp*pym+pzp*pzm)/sqrt(pxp**2+pyp**2+pzp**2)_
+/sqrt(pxm**2+pym**2+pzm**2)  $42  
+
+
+for/file 66 ../fig/acol_bkg_k.ps; meta 66 -111
+zone 
+opt nstat 
+set hcol 1;h/pl 101
+set hcol 1101;h/pl 102 s; set hcol 1 
+itx -0.999 10 '[g]KK'
+close 66
+return

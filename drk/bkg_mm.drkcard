@@ -1,0 +1,36 @@
+/* LINK ../src/chic ../src/chic.opt
+/*LINK ../src/chic_mumax ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/exe/mm/bkg_mm.drkx
+/*INPUT DISK ~/MC/mm/
+/*OUTPUT DISK ../hbk/
+/*HBOOK ../hbk/bkg_mm.hbk
+/* HBOOK ../hbk/bkg_mm_t10.hbk
+/* HBOOK ../hbk/bkg_mm_max.hbk
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 102200
+NEVTIM 99999999
+
+comment NEVTOT 1022000
+
+
+BESIOR
+
+INPUT 200k1.ndst  RUN
+INPUT 200k2.ndst  RUN
+INPUT 200k3.ndst  RUN
+INPUT 200k4.ndst  RUN
+INPUT 200k5.ndst  RUN
+INPUT 200k6.ndst  RUN
+INPUT 200k7.ndst  RUN
+INPUT 200k8.ndst  RUN
+INPUT 200k9.ndst  RUN
+INPUT 200k10.ndst  RUN
+
+BESEOR
+END

@@ -1,0 +1,39 @@
+/ *LINK ../src/chic ../src/chic.opt
+/*LINK ../src/chic_bb ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/exe/bkg_bb.drkx
+/*INPUT DISK ~/MC/bhabha
+/*OUTPUT DISK ../hbk/
+/* HBOOK ../hbk/bkg_bb.hbk
+/*HBOOK ../hbk/bkg_bb_max.hbk2
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 
+NEVTIM 99999999
+
+BESIOR
+
+
+INPUT bb3686c_100k_1.ndst  RUN
+INPUT bb3686c_100k_2.ndst  RUN
+INPUT bb3686c_100k_3.ndst  RUN
+INPUT bb3686c_100k_4.ndst  RUN
+INPUT bb3686c_100k_5.ndst  RUN
+INPUT bb3686c_100k_6.ndst  RUN
+INPUT bb3686c_100k_7.ndst  RUN
+INPUT bb3686c_100k_8.ndst  RUN
+INPUT bb3686c_100k_9.ndst  RUN
+INPUT bb3686c_100k_10.ndst RUN
+INPUT bb3686c_100k_11.ndst RUN
+INPUT bb3686c_100k_12.ndst RUN
+INPUT bb3686c_100k_13.ndst RUN
+INPUT bb3686c_100k_14.ndst RUN
+
+
+
+BESEOR
+END

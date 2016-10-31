@@ -1,0 +1,270 @@
+MACRO cut  
+
+CUT 0 -
+
+* common
+
+cut $1  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $2  scep+scem<1.or.xse1+xse2<-3.0
+cut $3  tof1<200.and.tof2<200.and.abs(tof1-tof2)<4
+
+* Pi Pi
+cut $11  PRB4CPI>0.01 
+cut $12  CSQ4CPI.LT.CSQ4CKA
+cut $13  muidp+muidm.lt.3                     |cut2 set default for PP
+*cut $13  muidp+muidm.lt.5                     |cut1
+
+cut $20  $1.and.$2.and.$3.and.$11.and.$12.and.$13
+
+cut $21 mallpi>3.2.and.mallpi<3.7     
+cut $22 mallpi>3.54.and.mallpi<3.57   
+cut $23 mallpi>3.38.and.mallpi<3.44   
+cut $24 mallpi>3.525.and.mallpi<3.585   
+
+cut $31 $20.and.$21       | for full range    
+cut $32 $20.and.$22       | for chic2         
+cut $33 $20.and.$23       | for chic0         
+cut $34 $20.and.$24
+
+* K  K
+cut $41  PRB4CKA>0.01 
+cut $42  CSQ4CKA.LT.CSQ4CPI
+cut $43  muidp+muidm.lt.5                     |cut1 set default for KK
+
+cut $50  $1.and.$2.and.$3.and.$41.and.$42.and.$43
+
+cut $51  mallka>3.2.and.mallka<3.7     
+cut $52  mallka>3.54.and.mallka<3.57   
+cut $53  mallka>3.38.and.mallka<3.44   
+cut $54  mallka>3.525.and.mallka<3.585
+
+cut $61  $50.and.$51      | for full range                        
+cut $62  $50.and.$52      | for chic2         
+cut $63  $50.and.$53      | for chic0         
+cut $64  $50.and.$54
+
+return
+****************************************
+macro file
+close 0
+chain -
+chain dt  ../hbk/chic.hbk
+chain h_chic2pp  ../hbk/h_chic2pp.hbk
+chain h_chic2kk  ../hbk/h_chic2kk.hbk
+chain g_chic2pp  ../hbk/g_chic2pp.hbk
+chain g_chic2kk  ../hbk/g_chic2kk.hbk
+chain f_chic2pp  ../hbk/2_f_chic2pp_100k.hbk
+chain f_chic2kk  ../hbk/2_f_chic2kk_100k.hbk
+chain f_chic2kk_53k  ../hbk/2_f_chic2kk_53k.hbk
+chain f_chic2kk_62k  ../hbk/2_f_chic2kk_62k.hbk
+chain h_chic0pp  ../hbk/h_chic0pp.hbk
+chain h_chic0kk  ../hbk/h_chic0kk.hbk
+chain bkg_p  ../hbk/bkg_bb.hbk_
+ ../hbk/bkg_ee.hbk_
+ ../hbk/bkg_dimu.hbk_
+ ../hbk/bkg_mm.hbk_
+ ../hbk/bkg_ggmm-c0.hbk_
+ ../hbk/bkg_ggmm-c1.hbk_ 
+ ../hbk/bkg_ggmm-c2.hbk_
+ ../hbk/bkg_p0p0mm.hbk_
+ ../hbk/bkg_ppmm.hbk_
+ ../hbk/bkg_etamm.hbk_
+ ../hbk/bkg_3pi.hbk_
+ ../hbk/bkg_4pi.hbk_
+ ../hbk/bkg_5pi.hbk_
+ ../hbk/bkg_p2pipi.hbk_
+ ../hbk/bkg_p2kk.hbk_
+ ../hbk/bkg_p2pp.hbk
+
+chain bkg_k  ../hbk/bkg_bb.hbk_
+ ../hbk/bkg_ee.hbk_
+ ../hbk/bkg_dimu.hbk_
+ ../hbk/bkg_mm.hbk_
+ ../hbk/bkg_ggmm-c0.hbk_
+ ../hbk/bkg_ggmm-c1.hbk_ 
+ ../hbk/bkg_ggmm-c2.hbk_
+ ../hbk/bkg_p0p0mm.hbk_
+ ../hbk/bkg_ppmm.hbk_
+ ../hbk/bkg_etamm.hbk_
+ ../hbk/bkg_p0kk.hbk_
+ ../hbk/bkg_p0p0kk.hbk_
+ ../hbk/bkg_p0p0gkk.hbk_
+ ../hbk/bkg_3p0kk.hbk_
+ ../hbk/bkg_etagkk.hbk_
+ ../hbk/bkg_etap0kk.hbk_
+ ../hbk/bkg_p2pipi.hbk_
+ ../hbk/bkg_p2kk.hbk_
+ ../hbk/bkg_p2pp.hbk
+
+return
+************************************
+macro hc
+h/del 0
+1d 100 ' ' 100 3.2 3.7 
+1d 101 ' ' 100 3.54 3.57 
+
+1d 200 ' ' 100 3.2 3.7 
+return
+****************************************
+macro cutlist_p
+exe chic#file
+exe chic#cut
+h/del 0
+n/pl //dt/1.mallpi $22 idh=104
+n/pl //dt/1.mallpi $22.and.$11 idh=105
+n/pl //dt/1.mallpi $22.and.$11.and.$12 idh=106
+n/pl //dt/1.mallpi $22.and.$11.and.$12.and.$1  idh=107
+n/pl //dt/1.mallpi $22.and.$11.and.$12.and.$1.and.$2  idh=108
+n/pl //dt/1.mallpi $22.and.$11.and.$12.and.$1.and.$2.and.$3  idh=109
+
+$hinfo(104,sum)
+$hinfo(105,sum)
+$hinfo(106,sum)
+$hinfo(107,sum)
+$hinfo(108,sum)
+$hinfo(109,sum)
+
+return
+
+** KK
+macro cutlist_k
+
+n/pl //f_chic2kk/1.mallka $52 idh=104
+n/pl //f_chic2kk/1.mallka $52.and.$41 idh=105
+n/pl //f_chic2kk/1.mallka $52.and.$41.and.$42 idh=106
+n/pl //f_chic2kk/1.mallka $52.and.$41.and.$42.and.$1  idh=107
+n/pl //f_chic2kk/1.mallka $52.and.$41.and.$42.and.$1.and.$2  idh=108
+n/pl //f_chic2kk/1.mallka $52.and.$41.and.$42.and.$1.and.$2.and.$3  idh=109
+
+
+$hinfo(104,sum)
+$hinfo(105,sum)
+$hinfo(106,sum)
+$hinfo(107,sum)
+$hinfo(108,sum)
+$hinfo(109,sum)
+
+return
+********************
+macro sig_bkg_p
+exe chic#file
+exe chic#cut
+exe chic#hc
+
+set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+SET TXFP -20                          | Times bold
+SET CHHE 1                            | Text size 1 cm
+SET HWID 5                          | Histogram line WIDth
+n/pl //dt/1.mallpi $31 -100 
+n/pl //bkg_p/1.mallpi $31 -200
+for/file 69 ../fig/sig_bkg_p.ps; meta 69 -111
+opt nstat
+set hcol 1;h/pl 100
+set hcol 1101;h/pl 200 s; set hcol 1 
+atitle 'm?[p][p]!(GeV/c^2!)' 'Entries/5Mev/c^2' ! 222
+itx 3.6 200 'a)' 
+close 69
+ 
+
+return
+********************
+macro sig_bkg_k
+exe chic#file
+exe chic#cut
+exe chic#hc
+*
+n/pl //dt/1.mallka $61 -100 
+n/pl //bkg_p/1.mallka $61 -200
+for/file 69 ../fig/sig_bkg_k.ps; meta 69 -111
+opt nstat
+set hcol 1;h/pl 100
+set hcol 1101;h/pl 200 s; set hcol 1 
+set asiz .8; set ylab 2 ; set xlab 2; set xval 0.8 ; set yval 0.8
+SET TXFP -20                          | Times bold
+SET CHHE 1                            | Text size 1 cm
+atitle 'm?KK!(GeV/c^2!)' 'Entries/5Mev/c^2' ! 222
+itx 3.6 200 'b)' 
+close 69
+ 
+********************
+
+return
+macro scan_p
+exe chic#file
+exe chic#cut
+*output 68 ../dat/dt_p.dat
+*n/scan //dt/1        $32 ! ! ! thetagp thetap phip
+*output 68 ../dat/h_chic2pp.dat
+*n/scan //h_chic2pp/1        $32 ! ! ! thetagp thetap phip
+*output 68 ../dat/g_chic2pp.dat
+*n/scan //g_chic2pp/1        $32 ! ! ! thetagp thetap phip
+
+*n/pl //dt/1.mallpi    $33 
+*output 68 ../dat/dt_chic0_p.dat
+*n/scan //dt/1         $33 ! ! ! thetagp thetap phip
+
+n/pl //h_chic0pp/1.mallpi    $33 
+output 68 ../dat/h_chic0pp.dat
+n/scan //h_chic0pp/1         $33 ! ! ! thetagp thetap phip
+
+
+output -68
+return
+********************
+macro scan_k
+exe chic#file
+exe chic#cut
+*n/pl //dt/1.mallka $62 
+*output 68 ../dat/dt_k.dat
+*n/scan //dt/1        $62 ! ! ! thetagk thetak phik
+
+*n/pl //h_chic2kk/1.mallka   $62 
+*output 68 ../dat/h_chic2kk.dat
+*n/scan //h_chic2kk/1        $62 ! ! ! thetagk thetak phik
+
+*n/pl //g_chic2kk/1.mallka   $62 
+*output 68 ../dat/g_chic2kk.dat
+*n/scan //g_chic2kk/1        $62 ! ! ! thetagk thetak phik
+
+*n/pl //dt/1.mallka  $63 
+*output 68 ../dat/dt_chic0_k.dat
+*n/scan //dt/1        $63 ! ! ! thetagk thetak phik
+
+n/pl //h_chic0kk/1.mallka   $63
+output 68 ../dat/h_chic0kk.dat
+n/scan //h_chic0kk/1        $63 ! ! ! thetagk thetak phik
+
+output -68
+return
+********************
+macro cont_p
+exe chic#file
+exe chic#cut
+h/del 0
+zone 1 2
+n/pl //f_chic2pp/1.mallpi $32 -100
+n/pl //f_chic2kk_53k/1.mallpi $32 -101
+*n/pl //f_chic2kk_62k/1.mallpi $32 -101
+
+sigma eff=$hinfo(101,sum)/$hinfo(100,sum) 
+sigma seff=sqrt(53200*eff*(1-eff))/$hinfo(100,sum) 
+*sigma seff=sqrt(62000*eff*(1-eff))/$hinfo(100,sum) 
+mess $sigma(eff) '+/-' $sigma(seff)
+zone
+
+return
+********************
+macro cont_k
+exe chic#file
+exe chic#cut
+h/del 0
+zone 1 2
+n/pl //f_chic2kk_53k/1.mallka $62 -100
+n/pl //f_chic2pp/1.mallka $62 -101
+
+sigma eff=$hinfo(101,sum)/$hinfo(100,sum) 
+sigma seff=sqrt(100000*eff*(1-eff))/$hinfo(100,sum) 
+mess $sigma(eff) '+/-' $sigma(seff)
+zone
+
+return

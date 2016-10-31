@@ -1,0 +1,176 @@
+MACRO cut  
+
+CUT 0 -
+
+cut $1  PRB4CPI>0.01 
+cut $2  CSQ4CPI.LT.CSQ4CKA
+cut $3  ABS(PZM/PPM)<0.65.and.ABS(PZP/PPP)<0.65
+cut $4  scep+scem<1.or.xse1+xse2<-3.0
+cut $5  muidp+muidm.lt.3   |cut2 set this default for PP
+
+*cut $6 mallpi>3.55.and.mallpi<3.56 
+cut $6 mallpi>3.38.and.mallpi<3.44 
+cut $7 mallpi>3.54.and.mallpi<3.57
+cut $8 mallpi>3.525.and.mallpi<3.585 
+cut $9 mallpi>3.2.and.mallpi<3.7 
+
+cut $10 tof1<200.and.tof2<200
+cut $11 abs(tof1-tof2)<4
+
+
+*cut $10 $1.and.$2.and.$3.and.$4.and.$5
+*cut $20 $1.and.$2.and.$3.and.$4.and.$5.and.$10
+cut $20 $1.and.$2.and.$3.and.$4.and.$5.and.$10.and.$11
+
+cut $21 $20.and.$9  | 3.2-3.7
+cut $22 $20.and.$7  | 3.54-3.57
+cut $23 $20.and.$6  | for chic0
+cut $24 $20.and.$8
+
+
+** Kaon
+cut $31  PRB4CKA>0.01 
+cut $32  CSQ4CKA.LT.CSQ4CPI
+cut $35  muidp+muidm.lt.5   |cut1  default for kaon
+
+cut $36 mallka>3.38.and.mallka<3.44
+cut $37 mallka>3.54.and.mallka<3.57
+cut $38 mallka>3.525.and.mallka<3.585
+cut $39 mallka>3.2.and.mallka<3.7
+     
+*cut $40  $31.and.$32.and.$3.and.$4.and.$35
+*cut $40  $31.and.$32.and.$3.and.$4.and.$35.and.$10
+cut $40  $31.and.$32.and.$3.and.$4.and.$35.and.$10.and.$11
+
+cut $41  $40.and.$39
+cut $42  $40.and.$37
+cut $43  $40.and.$36
+cut $44  $40.and.$38
+
+return
+****************************************
+macro file
+close 0
+chain -
+chain dt  ../hbk/chic.hbk 
+*chain eg  ../hbk/chic_eg3-2.hbk 
+*chain eg  ../hbk/chic_eg3-3.hbk 
+*chain mcp  ../hbk/f_chic2pp_eg.hbk  ../hbk/bkg_p_eg.hbk 
+*chain mck  ../hbk/f_chic2kk_eg.hbk  ../hbk/bkg_p_eg.hbk 
+chain tof  ../hbk/chic.hbk
+*chain tofmcp  ../hbk/h_chic2pp_tof.hbk
+*chain tofmck  ../hbk/h_chic2kk_tof.hbk
+return
+****************************************
+macro vcp
+exe vctof#cut
+exe vctof#file
+h/del 0
+zone 1 3
+for/file 66 ../fig/vcp.ps; meta 66 -111
+title '[g][p][p]'
+n/pl //dt/1.xir  $12  -101
+n/pl //dt/1.yir  $12  -102
+n/pl //dt/1.zir  $12  -103
+zone 
+
+close 66
+
+return
+****************************************
+macro vck
+exe vctof#cut
+exe vctof#file
+h/del 0
+zone 1 3
+for/file 66 ../fig/vck.ps; meta 66 -111
+title '[g]KK'
+n/pl //dt/1.xir  $42  -101
+n/pl //dt/1.yir  $42  -102
+n/pl //dt/1.zir  $42  -103
+zone 
+close 66
+
+return
+****************************************
+macro tof
+exe vctof#cut
+exe vctof#file
+h/del 0
+1d 101 '[g][p][p]_TOF1-TOF2 ' 100 -10 10
+1d 102 '[g]KK_TOF1-TOF2' 100 -5 5
+zone 1 2
+*for/file 66 ../fig/tof.ps; meta 66 -111
+*for/file 66 ../fig/tof2.ps; meta 66 -111
+*for/file 66 ../fig/tof3.ps; meta 66 -111
+*opt nstat 
+* Test tof1&2
+*n/pl //tof/1.tof1  $12.and.tof1<200
+*n/pl //tof/1.tof2  $12.and.tof1<200
+
+*n/pl //tof/1.tof1-tof2  $12.and.(tof1-tof2<30)  -101
+*n/pl //tof/1.tof1-tof2  $42.and.(tof1-tof2<30)  -102
+
+n/pl //tof/1.tof1-tof2  $22  -101
+n/pl //tof/1.tof1-tof2  $42  -102
+
+zone 
+
+close 66
+opt stat 
+return
+*****************************************************
+macro scanp 
+exe vctof#cut
+exe vctof#file
+zone 1 3
+n/pl //tof/1.COS(thetagp)     $22
+n/pl //tof/1.COS(thetap)      $22
+n/pl //tof/1.phip             $22
+zone 
+n/pl //tof/1.tof1-tof2  $22
+output 68 ../dat/tof_pipi_dt.dat
+n/scan //tof/1          $22 ! ! ! thetagp thetap phip
+output -68
+return
+*****************************************************
+macro scanpmc 
+exe vctof#cut
+exe vctof#file
+zone 1 3
+n/pl //tofmcp/1.COS(thetagp)     $22
+n/pl //tofmcp/1.COS(thetap)      $22
+n/pl //tofmcp/1.phip             $22
+zone 
+output 68 ../dat/tof_pipi_mc.dat
+n/scan //tofmcp/1        $22 ! ! ! thetagp thetap phip
+output -68
+return
+*****************************************************
+macro scank
+exe vctof#cut
+exe vctof#file
+zone 1 3
+n/pl //tof/1.COS(thetagk)     $42
+n/pl //tof/1.COS(thetak)      $42
+n/pl //tof/1.phik             $42
+zone 
+n/pl //tof/1.tof1-tof2  $42
+output 68 ../dat/tof_kk_dt.dat
+n/scan //tof/1        $42 ! ! ! thetagk thetak phik
+output -68
+return
+*****************************************************
+macro scankmc
+exe vctof#cut
+exe vctof#file
+zone 1 3
+n/pl //tofmck/1.COS(thetagk)     $42
+n/pl //tofmck/1.COS(thetak)      $42
+n/pl //tofmck/1.phik             $42
+zone 
+n/pl //tofmck/1.tof1-tof2  $42
+output 68 ../dat/tof_kk_mc.dat
+n/scan //tofmck/1        $42 ! ! ! thetagk thetak phik
+output -68
+return

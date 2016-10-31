@@ -1,0 +1,23 @@
+/*LINK ../src/chic ../src/chic.opt
+/*INQ version(103) cernlib(new) run(yes) time(0:0)
+/*EXE  ~/exe/f_chic2pp.drkx
+/*INPUT DISK ~/MC/f_chic2pp/
+/*OUTPUT DISK ../hbk/
+/*HBOOK ../hbk/2_f_chic2pp_100k.hbk2
+
+
+NEWDST
+DSTIN
+DSTOUT
+NOLOG
+PRTLEV -1
+NEVTOT 
+NEVTIM 99999999
+
+BESIOR
+
+INPUT 2_50k1.ndst  RUN
+INPUT 2_50k2.ndst  RUN
+
+BESEOR
+END
